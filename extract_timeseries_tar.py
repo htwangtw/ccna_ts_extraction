@@ -89,7 +89,7 @@ if __name__ == '__main__':
     layout = BIDSLayout(CCNA_PATH, config=['bids','derivatives'])
     # layout.save(BIDS_INFO)
     subject_list = layout.get(return_type='id', target='subject')
-    output_root_dir = Path("/data/simexp/hwang/ccna_ts")
+    output_root_dir = Path("/data/simexp/hwang/")
 
     for atlas_name in ATLAS_METADATA.keys():
         print("-- {} --".format(atlas_name))
