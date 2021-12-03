@@ -98,6 +98,7 @@ if __name__ == '__main__':
         output_dir.mkdir(parents=True, exist_ok=True)
         atlas_masker = create_atlas_masker(atlas_name)
         for subject in subject_list:
+            print(f"sub-{subject}")
             # Note for AB
             # if multiple run, use run 2
             # if multiple session, use ses 1
@@ -132,10 +133,15 @@ if __name__ == '__main__':
                                                         motion='basic', wm_csf='basic', global_signal='basic',
                                                         scrub=5, fd_threshold=0.5, std_dvars_threshold=None,
                                                         demean=True)
-                timeseries = masker.fit_transform(fmri[0].path, confounds=confounds, sample_mask=sample_mask)
-                labels = atlas_masker[resolution]['labels']
-                timeseries = pd.DataFrame(timeseries, columns=labels)
-                timeseries.to_csv(timeseries_root_dir / output_filename, sep='\t', index=False)
+                if (len(sample_mask) / confounds.shape[0]) < 0.6:
+                    print("not scrubable")
+                else:
+                    timeseries = masker.fit_transform(fmri[0].path, confounds=confounds, sample_mask=sample_mask)
+                    labels = atlas_masker[resolution]['labels']
+                    timeseries = pd.DataFrame(timeseries, columns=labels)
+                    timeseries.to_csv(timeseries_root_dir / output_filename, sep='\t', index=False)
+                    print("done")
+                print("----")
     # tar the dataset
     with tarfile.open(output_root_dir / f"{dataset_name}.tar.gz", "w:gz") as tar:
         tar.add(output_dir, arcname=output_dir.name)
