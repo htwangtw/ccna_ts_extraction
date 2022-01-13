@@ -14,6 +14,7 @@ import nibabel as nb
 import nilearn
 from nilearn.connectome import ConnectivityMeasure
 from nilearn.datasets import fetch_atlas_difumo
+from nilearn.regions import RegionExtractor
 import nilearn.input_data
 
 from bids import BIDSLayout
@@ -21,7 +22,7 @@ from nilearn.interfaces.fmriprep import load_confounds
 
 
 CCNA_PATH = "/scratch/dlussier/ccna_fmriprep/1641486564/fmriprep/"
-BIDS_INFO =  Path(__file__) / ".bids_info"
+BIDS_INFO =  Path(__file__).parent / ".bids_info"
 ATLAS_METADATA = {
     'difumo': {'type': "dynamic",
                'resolutions': [64],
@@ -106,7 +107,7 @@ def bidsish_timeseries_file_name(file_entitiles, layout, atlas_name, resolution)
 
 if __name__ == '__main__':
     layout = BIDSLayout(CCNA_PATH, config=['bids','derivatives'])
-    layout.save(BIDS_INFO)
+    # layout.save(BIDS_INFO)
     subject_list = layout.get(return_type='id', target='subject')
     output_root_dir = Path.home() / "scratch"
 
@@ -116,10 +117,10 @@ if __name__ == '__main__':
         output_dir = output_root_dir / dataset_name
         output_dir.mkdir(parents=True, exist_ok=True)
         atlas_resolution = 64
-        atlas = datasets.fetch_atlas_difumo(dimension=atlas_resolution,resolution_mm=3)
+        atlas = fetch_atlas_difumo(dimension=atlas_resolution,resolution_mm=3)
         extractor, labels = extract_regions_network(atlas.maps)
         nb.save(extractor.regions_img_,
-                output_dir / "atlas-difumo_network-{atlas_resolution}_regions.nii.gz")
+                output_dir / f"atlas-difumo_network-{atlas_resolution}_regions.nii.gz")
 
         for subject in subject_list:
             print(f"sub-{subject}")
