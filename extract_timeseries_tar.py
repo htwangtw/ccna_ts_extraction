@@ -13,7 +13,7 @@ import nibabel as nb
 
 import nilearn
 from nilearn.connectome import ConnectivityMeasure
-import nilearn.datasets
+from nilearn.datasets import fetch_atlas_difumo
 import nilearn.input_data
 
 from bids import BIDSLayout
@@ -106,7 +106,7 @@ def bidsish_timeseries_file_name(file_entitiles, layout, atlas_name, resolution)
 
 if __name__ == '__main__':
     layout = BIDSLayout(CCNA_PATH, config=['bids','derivatives'])
-    # layout.save(BIDS_INFO)
+    layout.save(BIDS_INFO)
     subject_list = layout.get(return_type='id', target='subject')
     output_root_dir = Path.home() / "scratch"
 
