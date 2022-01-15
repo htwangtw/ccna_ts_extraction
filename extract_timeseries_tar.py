@@ -158,7 +158,7 @@ if __name__ == '__main__':
                                                     demean=True)
             timeseries = extractor.fit_transform(fmri[0].path, confounds=confounds, sample_mask=sample_mask)
 
-            # Estimating connectomes and save for pytorch to load
+            # Estimating connectomes
             corr_measure = ConnectivityMeasure(kind="correlation")
             connectome = corr_measure.fit_transform([timeseries])[0]
 
